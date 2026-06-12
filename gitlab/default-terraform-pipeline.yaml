@@ -21,6 +21,7 @@ checkov scan:
       junit: checkov-report.xml
 
 plan:
+  resource_group: terraform
   stage: before deploy
   image:
     name: hashicorp/terraform:latest
@@ -33,6 +34,7 @@ plan:
       - $TERRAFORM_DIR/planfile
 
 apply:
+  resource_group: terraform
   stage: deploy
   image:
     name: hashicorp/terraform:latest
