@@ -31,3 +31,16 @@ plan:
   artifacts:
     paths:
       - $TERRAFORM_DIR/planfile
+
+apply:
+  stage: deploy
+  image:
+    name: hashicorp/terraform:latest
+    entrypoint: [""]
+  script:
+    - terraform -chdir="${TERRAFORM_DIR}" apply -auto-approve planfile
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: always
