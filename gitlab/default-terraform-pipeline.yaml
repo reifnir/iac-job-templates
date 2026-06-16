@@ -14,11 +14,18 @@ checkov scan:
     name: bridgecrew/checkov:latest
     entrypoint: [""]
   script:
-    - checkov -d "${TERRAFORM_DIR}" -o junitxml > checkov-report.xml
+    - checkov
+      -d "${TERRAFORM_DIR}"
+      -o cli
+      -o junitxml
+      -o json
+      --output-file-path console,checkov-report.xml,checkov-report.json
   artifacts:
     when: always
     reports:
       junit: checkov-report.xml
+    paths:
+      - checkov-report.json
 
 plan:
   resource_group: terraform
