@@ -16,6 +16,7 @@ checkov scan:
   variables:
     FORCE_COLOR: "1"
   script:
+    - env | grep COLOR
     - checkov
       -d "${TERRAFORM_DIR}"
       -o cli
