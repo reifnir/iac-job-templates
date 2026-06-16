@@ -13,6 +13,8 @@ checkov scan:
   image:
     name: bridgecrew/checkov:latest
     entrypoint: [""]
+  variables:
+    FORCE_COLOR: "1"
   script:
     - checkov
       -d "${TERRAFORM_DIR}"
