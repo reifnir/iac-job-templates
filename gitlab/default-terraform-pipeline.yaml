@@ -16,13 +16,13 @@ checkov scan:
   variables:
     FORCE_COLOR: "1"
   script:
-    - env | grep COLOR
     - checkov
       -d "${TERRAFORM_DIR}"
       -o cli
       -o junitxml
       -o json
       --output-file-path console,checkov-report.xml,checkov-report.json
+      --show-config
   artifacts:
     when: always
     reports:
