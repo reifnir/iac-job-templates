@@ -13,22 +13,16 @@ checkov scan:
   image:
     name: bridgecrew/checkov:latest
     entrypoint: [""]
-  variables:
-    FORCE_COLOR: "1"
   script:
     - checkov
-      -d "${TERRAFORM_DIR}"
-      -o cli
-      -o junitxml
-      -o json
-      --output-file-path console,checkov-report.xml,checkov-report.json
-      --show-config
+      --directory "${TERRAFORM_DIR}"
+      --output cli
+      --output junitxml
+      --output-file-path console,checkov-report.xml
   artifacts:
     when: always
     reports:
       junit: checkov-report.xml
-    paths:
-      - checkov-report.json
 
 plan:
   resource_group: terraform
