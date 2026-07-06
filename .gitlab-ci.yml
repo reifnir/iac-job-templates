@@ -70,3 +70,15 @@ s3 dont pass bucket:
     strategy: depend
     include:
       - local: gitlab/default-terraform-pipeline.yaml
+
+s3 dont pass credentials:
+  stage: test
+  variables:
+    TERRAFORM_DIR: tests/s3-simple
+    TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
+    TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
+    TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-credentials.tfstate
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/default-terraform-pipeline.yaml
