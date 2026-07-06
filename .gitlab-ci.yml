@@ -13,6 +13,7 @@ stages:
 simple test:
   stage: test
   variables:
+    JOB_RESOURCE_GROUP: simple-test
     TERRAFORM_DIR: tests/simple
   trigger:
     strategy: depend
@@ -21,6 +22,8 @@ simple test:
 
 simple empty TERRAFORM_DIR:
   stage: test
+  variables:
+    JOB_RESOURCE_GROUP: simple-empty-terraform-dir
   trigger:
     strategy: depend
     include:
@@ -36,6 +39,7 @@ s3 pass everything:
     # automation (which we'll need to store in terraform state)
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    JOB_RESOURCE_GROUP: s3-pass-everything
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
@@ -50,6 +54,7 @@ s3 dont pass region:
   variables:
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    JOB_RESOURCE_GROUP: s3-dont-pass-region
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
     TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-region.tfstate
@@ -63,6 +68,7 @@ s3 dont pass bucket:
   variables:
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    JOB_RESOURCE_GROUP: s3-dont-pass-bucket
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-bucket.tfstate
@@ -74,6 +80,7 @@ s3 dont pass bucket:
 s3 dont pass credentials:
   stage: test
   variables:
+    JOB_RESOURCE_GROUP: s3-dont-pass-credentials
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
@@ -82,3 +89,36 @@ s3 dont pass credentials:
     strategy: depend
     include:
       - local: gitlab/default-terraform-pipeline.yaml
+
+# ==================================
+# Default resource group concurrency test
+# Both jobs share the same state key, so if they run concurrently, one
+# should fail to acquire the state lock.
+# ==================================
+default resource group concurrency 1:
+  stage: test
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    TERRAFORM_DIR: tests/s3-simple
+    TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
+    TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
+    TERRAFORM_STATE_KEY: tests/s3-simple/default-resource-group-concurrency.tfstate
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/default-terraform-pipeline-default-resource-group.yaml
+
+default resource group concurrency 2:
+  stage: test
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    TERRAFORM_DIR: tests/s3-simple
+    TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
+    TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
+    TERRAFORM_STATE_KEY: tests/s3-simple/default-resource-group-concurrency.tfstate
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/default-terraform-pipeline-default-resource-group.yaml
