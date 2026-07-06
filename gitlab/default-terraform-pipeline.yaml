@@ -24,6 +24,23 @@ checkov scan:
     reports:
       junit: checkov-report.xml
 
+.before_terraform_action:
+  script:
+    - if [ -z "${TERRAFORM_DIR}" ];
+      then echo "TERRAFORM_DIR was unset, defaulting to './terraform'";
+      export TERRAFORM_DIR="./terraform";
+      fi
+    - echo "Terraform variables:"
+    - echo "  TERRAFORM_DIR:          '${TERRAFORM_DIR}'"
+    # S3 backend variables
+    - echo "  TERRAFORM_STATE_REGION: '${TERRAFORM_STATE_REGION}'"
+    - echo "  TERRAFORM_STATE_BUCKET: '${TERRAFORM_STATE_BUCKET}'"
+    - echo "  TERRAFORM_STATE_KEY:    '${TERRAFORM_STATE_KEY}'"
+    - echo "Sensitive variables:"
+    - echo "  AWS_ACCESS_KEY_ID:     $(echo "${AWS_ACCESS_KEY_ID}" | sed 's/./*/g')"
+    - echo "  AWS_SECRET_ACCESS_KEY: $(echo "${AWS_SECRET_ACCESS_KEY}" | sed 's/./*/g')"
+    - terraform -chdir="${TERRAFORM_DIR}" init
+
 plan:
   resource_group: terraform
   stage: before deploy
@@ -31,7 +48,7 @@ plan:
     name: hashicorp/terraform:latest
     entrypoint: [""]
   script:
-    - terraform -chdir="${TERRAFORM_DIR}" init
+    - !reference [.before_terraform_action, scripts]
     - terraform -chdir="${TERRAFORM_DIR}" plan -out=planfile
   artifacts:
     paths:
@@ -44,7 +61,7 @@ apply:
     name: hashicorp/terraform:latest
     entrypoint: [""]
   script:
-    - terraform -chdir="${TERRAFORM_DIR}" init
+    - !reference [.before_terraform_action, scripts]
     - terraform -chdir="${TERRAFORM_DIR}" apply -auto-approve planfile
   rules:
     - if: $CI_MERGE_REQUEST_ID
