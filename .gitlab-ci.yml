@@ -89,3 +89,36 @@ s3 dont pass credentials:
     strategy: depend
     include:
       - local: gitlab/default-terraform-pipeline.yaml
+
+# ==================================
+# Default resource group concurrency test
+# Both jobs share the same state key, so if they run concurrently, one
+# should fail to acquire the state lock.
+# ==================================
+default resource group concurrency 1:
+  stage: test
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    TERRAFORM_DIR: tests/s3-simple
+    TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
+    TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
+    TERRAFORM_STATE_KEY: tests/s3-simple/default-resource-group-concurrency.tfstate
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/default-terraform-pipeline-default-resource-group.yaml
+
+default resource group concurrency 2:
+  stage: test
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    TERRAFORM_DIR: tests/s3-simple
+    TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
+    TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
+    TERRAFORM_STATE_KEY: tests/s3-simple/default-resource-group-concurrency.tfstate
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/default-terraform-pipeline-default-resource-group.yaml
