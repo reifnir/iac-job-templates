@@ -75,7 +75,7 @@ plan:
     - terraform -chdir="${TERRAFORM_DIR}" plan -out=planfile
   artifacts:
     paths:
-      - $TERRAFORM_DIR/planfile
+      - ./**/planfile
 
 apply:
   resource_group: terraform
