@@ -44,7 +44,7 @@ plan:
     name: hashicorp/terraform:latest
     entrypoint: [""]
   script:
-    - !reference [.before_terraform_action, scripts]
+    - !reference [.before_terraform_action, script]
     - terraform -chdir="${TERRAFORM_DIR}" plan -out=planfile
   artifacts:
     paths:
@@ -57,7 +57,7 @@ apply:
     name: hashicorp/terraform:latest
     entrypoint: [""]
   script:
-    - !reference [.before_terraform_action, scripts]
+    - !reference [.before_terraform_action, script]
     - terraform -chdir="${TERRAFORM_DIR}" apply -auto-approve planfile
   rules:
     - if: $CI_MERGE_REQUEST_ID
