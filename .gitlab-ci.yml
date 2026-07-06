@@ -1,0 +1,15 @@
+# By default, this pipeline will run all jobs except apply on merge requests.
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+stages:
+  - test
+
+simple test:
+  stage: test
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/default-terraform-pipeline.yaml
