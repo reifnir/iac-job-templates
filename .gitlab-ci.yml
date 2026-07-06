@@ -44,3 +44,44 @@ s3 pass everything:
     strategy: depend
     include:
       - local: gitlab/default-terraform-pipeline.yaml
+
+s3 dont pass region:
+  stage: test
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    TERRAFORM_DIR: tests/s3-simple
+    TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
+    TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-region.tfstate
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/default-terraform-pipeline.yaml
+
+s3 dont pass bucket:
+  stage: test
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    TERRAFORM_DIR: tests/s3-simple
+    TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
+    TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-bucket.tfstate
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/default-terraform-pipeline.yaml
+
+s3 dont pass key:
+  stage: test
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    TERRAFORM_DIR: tests/s3-simple
+    TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
+    TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/default-terraform-pipeline.yaml
+  # This one is actually required
+  allow_failure: true
