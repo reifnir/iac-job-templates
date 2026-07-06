@@ -11,9 +11,9 @@ stages:
 # Simple tests without any backend
 # ==================================
 simple test:
-  resource_group: simple-test
   stage: test
   variables:
+    JOB_RESOURCE_GROUP: simple-test
     TERRAFORM_DIR: tests/simple
   trigger:
     strategy: depend
@@ -21,8 +21,9 @@ simple test:
       - local: gitlab/default-terraform-pipeline.yaml
 
 simple empty TERRAFORM_DIR:
-  resource_group: simple-empty-terraform-dir
   stage: test
+  variables:
+    JOB_RESOURCE_GROUP: simple-empty-terraform-dir
   trigger:
     strategy: depend
     include:
@@ -32,13 +33,13 @@ simple empty TERRAFORM_DIR:
 # AWS S3 backend tests
 # ==================================
 s3 pass everything:
-  resource_group: s3-pass-everything
   stage: test
   variables:
     # Use the manually created creds until we can create and rotate them through
     # automation (which we'll need to store in terraform state)
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    JOB_RESOURCE_GROUP: s3-pass-everything
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
@@ -49,11 +50,11 @@ s3 pass everything:
       - local: gitlab/default-terraform-pipeline.yaml
 
 s3 dont pass region:
-  resource_group: s3-dont-pass-region
   stage: test
   variables:
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    JOB_RESOURCE_GROUP: s3-dont-pass-region
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
     TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-region.tfstate
@@ -63,11 +64,11 @@ s3 dont pass region:
       - local: gitlab/default-terraform-pipeline.yaml
 
 s3 dont pass bucket:
-  resource_group: s3-dont-pass-bucket
   stage: test
   variables:
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    JOB_RESOURCE_GROUP: s3-dont-pass-bucket
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-bucket.tfstate
@@ -77,9 +78,9 @@ s3 dont pass bucket:
       - local: gitlab/default-terraform-pipeline.yaml
 
 s3 dont pass credentials:
-  resource_group: s3-dont-pass-credentials
   stage: test
   variables:
+    JOB_RESOURCE_GROUP: s3-dont-pass-credentials
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT

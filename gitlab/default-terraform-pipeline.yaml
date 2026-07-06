@@ -57,15 +57,17 @@ checkov scan:
       echo "  TERRAFORM_STATE_BUCKET: '${TERRAFORM_STATE_BUCKET}'"
       echo "  TERRAFORM_STATE_KEY:    '${TERRAFORM_STATE_KEY}'"
       echo "Sensitive variables:"
-      echo "  AWS_ACCESS_KEY_ID:     $(echo "${AWS_ACCESS_KEY_ID}" | sed 's/./*/g')"
-      echo "  AWS_SECRET_ACCESS_KEY: $(echo "${AWS_SECRET_ACCESS_KEY}" | sed 's/./*/g')"
+      echo "  AWS_ACCESS_KEY_ID:      '$(echo "${AWS_ACCESS_KEY_ID}" | sed 's/./*/g')'"
+      echo "  AWS_SECRET_ACCESS_KEY:  '$(echo "${AWS_SECRET_ACCESS_KEY}" | sed 's/./*/g')'"
+      echo "Other useful variables:"
+      echo "  JOB_RESOURCE_GROUP:     '$JOB_RESOURCE_GROUP'"
     - terraform -chdir="${TERRAFORM_DIR}" init 
       -backend-config="region=${TERRAFORM_STATE_REGION}"
       -backend-config="bucket=${TERRAFORM_STATE_BUCKET}"
       -backend-config="key=${TERRAFORM_STATE_KEY}"
 
 plan:
-  resource_group: terraform
+  resource_group: $JOB_RESOURCE_GROUP
   stage: before deploy
   image:
     name: hashicorp/terraform:latest
@@ -78,7 +80,7 @@ plan:
       - ./**/planfile
 
 apply:
-  resource_group: terraform
+  resource_group: $JOB_RESOURCE_GROUP
   stage: deploy
   image:
     name: hashicorp/terraform:latest
