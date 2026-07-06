@@ -9,6 +9,8 @@ stages:
 
 simple test:
   stage: test
+  variables:
+    TERRAFORM_DIR: tests/simple
   trigger:
     strategy: depend
     include:
