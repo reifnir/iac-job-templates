@@ -135,3 +135,13 @@ single state project:
     strategy: depend
     include:
       - local: gitlab/terraform-pipeline-single-state-project.yaml
+
+single state project with explicit TERRAFORM_STATE_KEY:
+  stage: test
+  variables:
+    TERRAFORM_DIR: tests/s3-simple
+    TERRAFORM_STATE_KEY: reifnir-public-projects/iac/job-templates-explicit.tfstate
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/terraform-pipeline-single-state-project.yaml
