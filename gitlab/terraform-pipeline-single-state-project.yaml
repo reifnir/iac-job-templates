@@ -4,6 +4,9 @@
 include:
   - local: gitlab/terraform-pipeline-default.yaml
 
+variables:
+  TERRAFORM_STATE_KEY: ${CI_PROJECT_PATH}.tfstate
+
 plan:
   resource_group: terraform
 
