@@ -1,0 +1,14 @@
+# This is the same template as terraform-pipeline-default.yaml, except that it already has a value for the resource_group field.
+# This makes sense for any projects that only involve a single set of terraform state/environment.
+
+include:
+  - local: gitlab/terraform-pipeline-default.yaml
+
+variables:
+  TERRAFORM_STATE_KEY: ${CI_PROJECT_PATH}.tfstate
+
+plan:
+  resource_group: terraform
+
+apply:
+  resource_group: terraform

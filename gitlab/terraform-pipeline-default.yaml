@@ -26,6 +26,7 @@ checkov scan:
 
 .before_terraform_action:
   script:
+    - env | grep CI_ | sort
     - |
       echo "Setting default values for TERRAFORM_DIR, TERRAFORM_STATE_REGION, and TERRAFORM_STATE_BUCKET if they are unset..."
       if [ -z "${TERRAFORM_DIR}" ]; then
