@@ -11,6 +11,7 @@ stages:
 # Simple tests without any backend
 # ==================================
 simple test:
+  resource_group: simple-test
   stage: test
   variables:
     TERRAFORM_DIR: tests/simple
@@ -20,6 +21,7 @@ simple test:
       - local: gitlab/default-terraform-pipeline.yaml
 
 simple empty TERRAFORM_DIR:
+  resource_group: simple-empty-terraform-dir
   stage: test
   trigger:
     strategy: depend
@@ -30,6 +32,7 @@ simple empty TERRAFORM_DIR:
 # AWS S3 backend tests
 # ==================================
 s3 pass everything:
+  resource_group: s3-pass-everything
   stage: test
   variables:
     # Use the manually created creds until we can create and rotate them through
@@ -46,6 +49,7 @@ s3 pass everything:
       - local: gitlab/default-terraform-pipeline.yaml
 
 s3 dont pass region:
+  resource_group: s3-dont-pass-region
   stage: test
   variables:
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
@@ -59,6 +63,7 @@ s3 dont pass region:
       - local: gitlab/default-terraform-pipeline.yaml
 
 s3 dont pass bucket:
+  resource_group: s3-dont-pass-bucket
   stage: test
   variables:
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
@@ -72,6 +77,7 @@ s3 dont pass bucket:
       - local: gitlab/default-terraform-pipeline.yaml
 
 s3 dont pass credentials:
+  resource_group: s3-dont-pass-credentials
   stage: test
   variables:
     TERRAFORM_DIR: tests/s3-simple
