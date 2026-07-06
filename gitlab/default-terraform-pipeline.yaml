@@ -31,14 +31,14 @@ checkov scan:
       export TERRAFORM_DIR="./terraform";
       fi
     - echo "Terraform variables:"
-    - echo "  TERRAFORM_DIR:          '${TERRAFORM_DIR}'"
+    - 'echo "  TERRAFORM_DIR:          '${TERRAFORM_DIR}'"'
     # S3 backend variables
-    - echo "  TERRAFORM_STATE_REGION: '${TERRAFORM_STATE_REGION}'"
-    - echo "  TERRAFORM_STATE_BUCKET: '${TERRAFORM_STATE_BUCKET}'"
-    - echo "  TERRAFORM_STATE_KEY:    '${TERRAFORM_STATE_KEY}'"
+    - 'echo "  TERRAFORM_STATE_REGION: '${TERRAFORM_STATE_REGION}'"'
+    - 'echo "  TERRAFORM_STATE_BUCKET: '${TERRAFORM_STATE_BUCKET}'"'
+    - 'echo "  TERRAFORM_STATE_KEY:    '${TERRAFORM_STATE_KEY}'"'
     - echo "Sensitive variables:"
-    - echo "  AWS_ACCESS_KEY_ID:     $(echo "${AWS_ACCESS_KEY_ID}" | sed 's/./*/g')"
-    - echo "  AWS_SECRET_ACCESS_KEY: $(echo "${AWS_SECRET_ACCESS_KEY}" | sed 's/./*/g')"
+    - 'echo "  AWS_ACCESS_KEY_ID:     $(echo "${AWS_ACCESS_KEY_ID}" | sed ''s/./*/g'')"'
+    - 'echo "  AWS_SECRET_ACCESS_KEY: $(echo "${AWS_SECRET_ACCESS_KEY}" | sed ''s/./*/g'')"'
     - terraform -chdir="${TERRAFORM_DIR}" init
 
 plan:
