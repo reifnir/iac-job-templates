@@ -27,14 +27,15 @@ checkov scan:
 .before_terraform_action:
   script:
     - if [ -z "${TERRAFORM_DIR}" ]; then echo "TERRAFORM_DIR was unset, defaulting to './terraform'"; export TERRAFORM_DIR="./terraform"; fi
-    - echo "Terraform variables:"
-    - 'echo "  TERRAFORM_DIR:          ''${TERRAFORM_DIR}''"'
-    - 'echo "  TERRAFORM_STATE_REGION: ''${TERRAFORM_STATE_REGION}''"'
-    - 'echo "  TERRAFORM_STATE_BUCKET: ''${TERRAFORM_STATE_BUCKET}''"'
-    - 'echo "  TERRAFORM_STATE_KEY:    ''${TERRAFORM_STATE_KEY}''"'
-    - echo "Sensitive variables:"
-    - 'echo "  AWS_ACCESS_KEY_ID:     ''$(echo "${AWS_ACCESS_KEY_ID}" | sed ''s/./*/g'')''"'
-    - 'echo "  AWS_SECRET_ACCESS_KEY: ''$(echo "${AWS_SECRET_ACCESS_KEY}" | sed ''s/./*/g'')''"'
+    - |
+      echo "Terraform variables:"
+      echo "  TERRAFORM_DIR:          '${TERRAFORM_DIR}'"
+      echo "  TERRAFORM_STATE_REGION: '${TERRAFORM_STATE_REGION}'"
+      echo "  TERRAFORM_STATE_BUCKET: '${TERRAFORM_STATE_BUCKET}'"
+      echo "  TERRAFORM_STATE_KEY:    '${TERRAFORM_STATE_KEY}'"
+      echo "Sensitive variables:"
+      echo "  AWS_ACCESS_KEY_ID:     $(echo "${AWS_ACCESS_KEY_ID}" | sed 's/./*/g')"
+      echo "  AWS_SECRET_ACCESS_KEY: $(echo "${AWS_SECRET_ACCESS_KEY}" | sed 's/./*/g')"
     - terraform -chdir="${TERRAFORM_DIR}" init
 
 plan:
