@@ -122,3 +122,12 @@ default resource group concurrency 2:
     strategy: depend
     include:
       - local: gitlab/terraform-pipeline-single-state-project.yaml
+
+single state project:
+  stage: test
+  variables:
+    TERRAFORM_DIR: tests/s3-simple
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/terraform-pipeline-single-state-project.yaml
