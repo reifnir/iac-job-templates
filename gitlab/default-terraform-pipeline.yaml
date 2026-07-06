@@ -26,7 +26,14 @@ checkov scan:
 
 .before_terraform_action:
   script:
-    - if [ -z "${TERRAFORM_DIR}" ]; then echo "TERRAFORM_DIR was unset, defaulting to './terraform'"; export TERRAFORM_DIR="./terraform"; fi
+    - |
+      echo "Setting default values for TERRAFORM_DIR, TERRAFORM_STATE_REGION, and TERRAFORM_STATE_BUCKET if they are unset..."
+      if [ -z "${TERRAFORM_DIR}" ]; then
+        echo "TERRAFORM_DIR was unset, defaulting to './terraform'";
+        export TERRAFORM_DIR="./terraform";
+      fi
+    #- if [ -z "${TERRAFORM_STATE_REGION}" ]; then echo "TERRAFORM_STATE_REGION was unset, defaulting to '${TERRAFORM_STATE_REGION_CURRENT}'"; export TERRAFORM_STATE_REGION="${TERRAFORM_STATE_REGION_CURRENT}"; fi
+    #- if [ -z "${TERRAFORM_STATE_BUCKET}" ]; then echo "TERRAFORM_STATE_BUCKET was unset, defaulting to '${TERRAFORM_STATE_BUCKET_CURRENT}'"; export TERRAFORM_STATE_BUCKET="${TERRAFORM_STATE_BUCKET_CURRENT}"; fi
     - |
       echo "Terraform variables:"
       echo "  TERRAFORM_DIR:          '${TERRAFORM_DIR}'"
