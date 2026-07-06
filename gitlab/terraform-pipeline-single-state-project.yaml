@@ -1,8 +1,8 @@
-# This is the same template as default-terraform-pipeline.yaml, except that it already has a value for the resource_group field.
+# This is the same template as terraform-pipeline-default.yaml, except that it already has a value for the resource_group field.
 # This makes sense for any projects that only involve a single set of terraform state/environment.
 
 include:
-  - local: gitlab/default-terraform-pipeline.yaml
+  - local: gitlab/terraform-pipeline-default.yaml
 
 plan:
   resource_group: terraform

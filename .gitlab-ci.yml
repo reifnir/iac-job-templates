@@ -18,7 +18,7 @@ simple test:
   trigger:
     strategy: depend
     include:
-      - local: gitlab/default-terraform-pipeline.yaml
+      - local: gitlab/terraform-pipeline-default.yaml
 
 simple empty TERRAFORM_DIR:
   stage: test
@@ -27,7 +27,7 @@ simple empty TERRAFORM_DIR:
   trigger:
     strategy: depend
     include:
-      - local: gitlab/default-terraform-pipeline.yaml
+      - local: gitlab/terraform-pipeline-default.yaml
 
 # ==================================
 # AWS S3 backend tests
@@ -47,7 +47,7 @@ s3 pass everything:
   trigger:
     strategy: depend
     include:
-      - local: gitlab/default-terraform-pipeline.yaml
+      - local: gitlab/terraform-pipeline-default.yaml
 
 s3 dont pass region:
   stage: test
@@ -61,7 +61,7 @@ s3 dont pass region:
   trigger:
     strategy: depend
     include:
-      - local: gitlab/default-terraform-pipeline.yaml
+      - local: gitlab/terraform-pipeline-default.yaml
 
 s3 dont pass bucket:
   stage: test
@@ -75,7 +75,7 @@ s3 dont pass bucket:
   trigger:
     strategy: depend
     include:
-      - local: gitlab/default-terraform-pipeline.yaml
+      - local: gitlab/terraform-pipeline-default.yaml
 
 s3 dont pass credentials:
   stage: test
@@ -88,7 +88,7 @@ s3 dont pass credentials:
   trigger:
     strategy: depend
     include:
-      - local: gitlab/default-terraform-pipeline.yaml
+      - local: gitlab/terraform-pipeline-default.yaml
 
 # ==================================
 # Default resource group concurrency test
@@ -107,7 +107,7 @@ default resource group concurrency 1:
   trigger:
     strategy: depend
     include:
-      - local: gitlab/default-terraform-pipeline-default-resource-group.yaml
+      - local: gitlab/terraform-pipeline-single-state-project.yaml
 
 default resource group concurrency 2:
   stage: test
@@ -121,4 +121,4 @@ default resource group concurrency 2:
   trigger:
     strategy: depend
     include:
-      - local: gitlab/default-terraform-pipeline-default-resource-group.yaml
+      - local: gitlab/terraform-pipeline-single-state-project.yaml
