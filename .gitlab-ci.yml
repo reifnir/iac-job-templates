@@ -7,43 +7,33 @@ workflow:
 stages:
   - test
 
-# ==================================
-# Simple tests without any backend
-# ==================================
-simple test:
-  stage: test
-  variables:
-    JOB_RESOURCE_GROUP: simple-test
-    TERRAFORM_DIR: tests/simple
-  trigger:
-    strategy: depend
-    include:
-      - local: gitlab/terraform-pipeline-default.yaml
-
-simple empty TERRAFORM_DIR:
-  stage: test
-  variables:
-    JOB_RESOURCE_GROUP: simple-empty-terraform-dir
-  trigger:
-    strategy: depend
-    include:
-      - local: gitlab/terraform-pipeline-default.yaml
-
-# ==================================
-# AWS S3 backend tests
-# ==================================
-s3 pass everything:
+pass everything:
   stage: test
   variables:
     # Use the manually created creds until we can create and rotate them through
     # automation (which we'll need to store in terraform state)
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
-    JOB_RESOURCE_GROUP: s3-pass-everything
+    STATE_RESOURCE_GROUP: s3-pass-everything
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/s3-pass-everything.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/s3-pass-everything.tfstate
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/terraform-pipeline-default.yaml
+
+dont pass terraform dir:
+  stage: test
+  variables:
+    # Use the manually created creds until we can create and rotate them through
+    # automation (which we'll need to store in terraform state)
+    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
+    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
+    STATE_RESOURCE_GROUP: s3-dont-pass-terraform-dir
+    TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/s3-dont-pass-terraform-dir.tfstate
   trigger:
     strategy: depend
     include:
@@ -54,10 +44,10 @@ s3 dont pass region:
   variables:
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
-    JOB_RESOURCE_GROUP: s3-dont-pass-region
+    STATE_RESOURCE_GROUP: s3-dont-pass-region
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-region.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/s3-dont-pass-region.tfstate
   trigger:
     strategy: depend
     include:
@@ -68,10 +58,10 @@ s3 dont pass bucket:
   variables:
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
-    JOB_RESOURCE_GROUP: s3-dont-pass-bucket
+    STATE_RESOURCE_GROUP: s3-dont-pass-bucket
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-bucket.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/s3-dont-pass-bucket.tfstate
   trigger:
     strategy: depend
     include:
@@ -80,11 +70,11 @@ s3 dont pass bucket:
 s3 dont pass credentials:
   stage: test
   variables:
-    JOB_RESOURCE_GROUP: s3-dont-pass-credentials
+    STATE_RESOURCE_GROUP: s3-dont-pass-credentials
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-credentials.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/s3-dont-pass-credentials.tfstate
   trigger:
     strategy: depend
     include:
@@ -103,11 +93,11 @@ default resource group concurrency 1:
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/default-resource-group-concurrency.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/default-resource-group-concurrency.tfstate
   trigger:
     strategy: depend
     include:
-      - local: gitlab/terraform-pipeline-single-state-project.yaml
+      - local: gitlab/terraform-pipeline-default.yaml
 
 default resource group concurrency 2:
   stage: test
@@ -117,30 +107,8 @@ default resource group concurrency 2:
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/default-resource-group-concurrency.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/default-resource-group-concurrency.tfstate
   trigger:
     strategy: depend
     include:
-      - local: gitlab/terraform-pipeline-single-state-project.yaml
-
-# ==================================
-# AWS S3 backend tests for a single state project
-# ==================================
-single state project:
-  stage: test
-  variables:
-    TERRAFORM_DIR: tests/s3-simple
-  trigger:
-    strategy: depend
-    include:
-      - local: gitlab/terraform-pipeline-single-state-project.yaml
-
-single state project with explicit TERRAFORM_STATE_KEY:
-  stage: test
-  variables:
-    TERRAFORM_DIR: tests/s3-simple
-    TERRAFORM_STATE_KEY: reifnir-public-projects/iac/job-templates-explicit.tfstate
-  trigger:
-    strategy: depend
-    include:
-      - local: gitlab/terraform-pipeline-single-state-project.yaml
+      - local: gitlab/terraform-pipeline-default.yaml
