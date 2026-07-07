@@ -73,7 +73,7 @@ dont pass credentials:
 default resource group concurrency 1:
   stage: test
   variables:
-    APPLY_TERRAFORM_WHEN: "never"
+    APPLY_TERRAFORM_WHEN: never
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
     TERRAFORM_DIR: tests/s3-simple
@@ -88,7 +88,7 @@ default resource group concurrency 1:
 default resource group concurrency 2:
   stage: test
   variables:
-    APPLY_TERRAFORM_WHEN: "never"
+    APPLY_TERRAFORM_WHEN: never
     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
     TERRAFORM_DIR: tests/s3-simple
