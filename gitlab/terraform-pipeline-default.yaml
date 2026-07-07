@@ -31,6 +31,12 @@ checkov scan:
 .before_terraform_action:
   script:
     - |
+      echo "Setting up AWS OIDC credentials for Terraform..."
+      echo "${GITLAB_OIDC_TOKEN}" > "${CI_BUILDS_DIR}/.oidc_token"
+      export AWS_WEB_IDENTITY_TOKEN_FILE="${CI_BUILDS_DIR}/.oidc_token"
+      export AWS_ROLE_ARN="${AUTOMATION_ROLE_ARN}"
+      export AWS_ROLE_SESSION_NAME="gitlab-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
+    - |
       # Uh oh, let's not default our state key
       if [ -z "${TERRAFORM_STATE_KEY}" ]; then
         echo 'TERRAFORM_STATE_KEY is required but was unset. Please set it in the project variables or in the pipeline configuration. "${CI_PROJECT_PATH}.tfstate" is fine for single-state projects.';
@@ -51,24 +57,15 @@ checkov scan:
         export TERRAFORM_STATE_BUCKET="${TERRAFORM_STATE_BUCKET_CURRENT}";
       fi
     - |
-      echo "Setting default values for AWS credentials if they are unset..."
-      if [ -z "${AWS_ACCESS_KEY_ID}" ]; then
-        echo "AWS_ACCESS_KEY_ID was unset, defaulting to AWS_ACCESS_KEY_ID_TEMP_ADMIN";
-        export AWS_ACCESS_KEY_ID="${AWS_ACCESS_KEY_ID_TEMP_ADMIN}";
-      fi
-      if [ -z "${AWS_SECRET_ACCESS_KEY}" ]; then
-        echo "AWS_SECRET_ACCESS_KEY was unset, defaulting to AWS_SECRET_ACCESS_KEY_TEMP_ADMIN";
-        export AWS_SECRET_ACCESS_KEY="${AWS_SECRET_ACCESS_KEY_TEMP_ADMIN}";
-      fi
-    - |
       echo "Terraform variables:"
+      echo "  AUTOMATION_ROLE_ARN:    '${AUTOMATION_ROLE_ARN}'"
+      echo "  AWS_ROLE_ARN:           '${AWS_ROLE_ARN}'"
+      echo "  AWS_ROLE_SESSION_NAME:  '${AWS_ROLE_SESSION_NAME}'"
       echo "  TERRAFORM_DIR:          '${TERRAFORM_DIR}'"
       echo "  TERRAFORM_STATE_REGION: '${TERRAFORM_STATE_REGION}'"
       echo "  TERRAFORM_STATE_BUCKET: '${TERRAFORM_STATE_BUCKET}'"
       echo "  TERRAFORM_STATE_KEY:    '${TERRAFORM_STATE_KEY}'"
-      echo "Sensitive variables:"
-      echo "  AWS_ACCESS_KEY_ID:      '$(echo "${AWS_ACCESS_KEY_ID}" | sed 's/./*/g')'"
-      echo "  AWS_SECRET_ACCESS_KEY:  '$(echo "${AWS_SECRET_ACCESS_KEY}" | sed 's/./*/g')'"
+
       echo "Other useful variables:"
       echo "  STATE_RESOURCE_GROUP:     '$STATE_RESOURCE_GROUP'"
     - terraform -chdir="${TERRAFORM_DIR}" init 
@@ -79,9 +76,16 @@ checkov scan:
 plan:
   resource_group: $STATE_RESOURCE_GROUP
   stage: before deploy
+  # The abstraction is not worth one tiny property. It's not changing any time soon.
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.com
   image:
     name: hashicorp/terraform:latest
     entrypoint: [""]
+  variables:
+    # A specific account id param will be required once I setup more than one account in the org.
+    AUTOMATION_ROLE_ARN: arn:aws:iam::${AWS_ACCOUNT_ID_ROOT}:role/ReifnirAutomationReadOnly
   script:
     - !reference [.before_terraform_action, script]
     - terraform -chdir="${TERRAFORM_DIR}" plan -out=planfile
@@ -92,9 +96,14 @@ plan:
 apply:
   resource_group: $STATE_RESOURCE_GROUP
   stage: deploy
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.com
   image:
     name: hashicorp/terraform:latest
     entrypoint: [""]
+  variables:
+    AUTOMATION_ROLE_ARN: arn:aws:iam::${AWS_ACCOUNT_ID_ROOT}:role/ReifnirAutomationDeploy
   script:
     - !reference [.before_terraform_action, script]
     - terraform -chdir="${TERRAFORM_DIR}" apply -auto-approve planfile
