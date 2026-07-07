@@ -99,6 +99,15 @@ apply:
     - !reference [.before_terraform_action, script]
     - terraform -chdir="${TERRAFORM_DIR}" apply -auto-approve planfile
   rules:
+    # Make for less collisions in testing, but allow some flexibility for the future when the parent pipeline knows best
+    # It's dumb I have to spell this out, but Gitlab blows up with "jobs:apply:rules:rule when unknown value: $apply_terraform_when"
+    # if I try to use a variable directly in the when clause.
+    - if: $APPLY_TERRAFORM_WHEN == "never"
+      when: never
+    - if: $APPLY_TERRAFORM_WHEN == "always"
+      when: always
+    - if: $APPLY_TERRAFORM_WHEN == "on_success"
+      when: on_success
     - if: $CI_MERGE_REQUEST_ID
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
