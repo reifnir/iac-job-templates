@@ -26,7 +26,12 @@ checkov scan:
 
 .before_terraform_action:
   script:
-    - env | grep CI_ | sort
+    - |
+      # Uh oh, let's not default our state key
+      if [ -z "${TERRAFORM_STATE_KEY}" ]; then
+        echo 'TERRAFORM_STATE_KEY is required but was unset. Please set it in the project variables or in the pipeline configuration. "${CI_PROJECT_PATH}.tfstate" is fine for single-state projects.';
+        exit 1;
+      fi
     - |
       echo "Setting default values for TERRAFORM_DIR, TERRAFORM_STATE_REGION, and TERRAFORM_STATE_BUCKET if they are unset..."
       if [ -z "${TERRAFORM_DIR}" ]; then
