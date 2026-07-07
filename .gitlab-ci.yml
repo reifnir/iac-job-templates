@@ -18,7 +18,7 @@ pass everything:
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/s3-pass-everything.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/s3-pass-everything.tfstate
   trigger:
     strategy: depend
     include:
@@ -33,7 +33,7 @@ dont pass terraform dir:
     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
     STATE_RESOURCE_GROUP: s3-dont-pass-terraform-dir
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-terraform-dir.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/s3-dont-pass-terraform-dir.tfstate
   trigger:
     strategy: depend
     include:
@@ -47,7 +47,7 @@ s3 dont pass region:
     STATE_RESOURCE_GROUP: s3-dont-pass-region
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-region.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/s3-dont-pass-region.tfstate
   trigger:
     strategy: depend
     include:
@@ -61,7 +61,7 @@ s3 dont pass bucket:
     STATE_RESOURCE_GROUP: s3-dont-pass-bucket
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-bucket.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/s3-dont-pass-bucket.tfstate
   trigger:
     strategy: depend
     include:
@@ -74,7 +74,7 @@ s3 dont pass credentials:
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-credentials.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/s3-dont-pass-credentials.tfstate
   trigger:
     strategy: depend
     include:
@@ -93,7 +93,7 @@ default resource group concurrency 1:
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/default-resource-group-concurrency.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/default-resource-group-concurrency.tfstate
   trigger:
     strategy: depend
     include:
@@ -107,7 +107,7 @@ default resource group concurrency 2:
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: tests/s3-simple/default-resource-group-concurrency.tfstate
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/default-resource-group-concurrency.tfstate
   trigger:
     strategy: depend
     include:
