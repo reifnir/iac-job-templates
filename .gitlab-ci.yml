@@ -13,7 +13,7 @@ stages:
 # simple test:
 #   stage: test
 #   variables:
-#     JOB_RESOURCE_GROUP: simple-test
+#     STATE_RESOURCE_GROUP: simple-test
 #     TERRAFORM_DIR: tests/simple
 #   trigger:
 #     strategy: depend
@@ -23,7 +23,7 @@ stages:
 # simple empty TERRAFORM_DIR:
 #   stage: test
 #   variables:
-#     JOB_RESOURCE_GROUP: simple-empty-terraform-dir
+#     STATE_RESOURCE_GROUP: simple-empty-terraform-dir
 #   trigger:
 #     strategy: depend
 #     include:
@@ -39,7 +39,7 @@ stages:
 #     # automation (which we'll need to store in terraform state)
 #     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
 #     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
-#     JOB_RESOURCE_GROUP: s3-pass-everything
+#     STATE_RESOURCE_GROUP: s3-pass-everything
 #     TERRAFORM_DIR: tests/s3-simple
 #     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
 #     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
@@ -54,7 +54,7 @@ stages:
 #   variables:
 #     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
 #     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
-#     JOB_RESOURCE_GROUP: s3-dont-pass-region
+#     STATE_RESOURCE_GROUP: s3-dont-pass-region
 #     TERRAFORM_DIR: tests/s3-simple
 #     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
 #     TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-region.tfstate
@@ -68,7 +68,7 @@ stages:
 #   variables:
 #     AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
 #     AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
-#     JOB_RESOURCE_GROUP: s3-dont-pass-bucket
+#     STATE_RESOURCE_GROUP: s3-dont-pass-bucket
 #     TERRAFORM_DIR: tests/s3-simple
 #     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
 #     TERRAFORM_STATE_KEY: tests/s3-simple/s3-dont-pass-bucket.tfstate
@@ -80,7 +80,7 @@ stages:
 # s3 dont pass credentials:
 #   stage: test
 #   variables:
-#     JOB_RESOURCE_GROUP: s3-dont-pass-credentials
+#     STATE_RESOURCE_GROUP: s3-dont-pass-credentials
 #     TERRAFORM_DIR: tests/s3-simple
 #     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
 #     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
