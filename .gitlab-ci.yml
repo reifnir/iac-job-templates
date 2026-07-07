@@ -10,10 +10,6 @@ stages:
 pass everything:
   stage: test
   variables:
-    # Use the manually created creds until we can create and rotate them through
-    # automation (which we'll need to store in terraform state)
-    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
-    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
     STATE_RESOURCE_GROUP: s3-pass-everything
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
@@ -27,8 +23,6 @@ pass everything:
 dont pass region:
   stage: test
   variables:
-    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
-    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
     STATE_RESOURCE_GROUP: s3-dont-pass-region
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
@@ -41,25 +35,10 @@ dont pass region:
 dont pass bucket:
   stage: test
   variables:
-    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
-    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
     STATE_RESOURCE_GROUP: s3-dont-pass-bucket
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/dont-pass-bucket.tfstate
-  trigger:
-    strategy: depend
-    include:
-      - local: gitlab/terraform-pipeline-default.yaml
-
-dont pass credentials:
-  stage: test
-  variables:
-    STATE_RESOURCE_GROUP: s3-dont-pass-credentials
-    TERRAFORM_DIR: tests/s3-simple
-    TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
-    TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
-    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/s3-simple/dont-pass-credentials.tfstate
   trigger:
     strategy: depend
     include:
@@ -74,8 +53,6 @@ default resource group concurrency 1:
   stage: test
   variables:
     APPLY_TERRAFORM_WHEN: never
-    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
-    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
@@ -89,8 +66,6 @@ default resource group concurrency 2:
   stage: test
   variables:
     APPLY_TERRAFORM_WHEN: never
-    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
-    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
     TERRAFORM_DIR: tests/s3-simple
     TERRAFORM_STATE_REGION: $TERRAFORM_STATE_REGION_CURRENT
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
@@ -115,10 +90,6 @@ pass minimal:
 dont pass terraform dir:
   stage: test
   variables:
-    # Use the manually created creds until we can create and rotate them through
-    # automation (which we'll need to store in terraform state)
-    AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID_TEMP_ADMIN
-    AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY_TEMP_ADMIN
     STATE_RESOURCE_GROUP: s3-dont-pass-terraform-dir
     TERRAFORM_STATE_BUCKET: $TERRAFORM_STATE_BUCKET_CURRENT
     TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/terraform/dont-pass-terraform-dir.tfstate
