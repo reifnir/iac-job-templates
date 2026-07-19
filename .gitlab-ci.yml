@@ -104,6 +104,7 @@ pass without scanning:
   variables:
     TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/terraform/pass-without-scanning.tfstate
     TERRAFORM_DIR: tests/checkov-fail
+    ALREADY_SCANNED: "true" # could be set to pizza for all I care, just that it's set
   trigger:
     strategy: depend
     include:
