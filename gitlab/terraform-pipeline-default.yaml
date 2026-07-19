@@ -4,6 +4,12 @@ workflow:
     - if: $CI_MERGE_REQUEST_ID
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
+# Yes this is a template that other pipelines call.
+# Yes Gitlab advises against inheriting > 1 file deep because they are much harder to reason about.
+# Yes this is a VERY tiny included file in the same repo/folder and could be convinced to have a little duplication if that's a line in the sand.
+include:
+  - local: gitlab/checkov.yaml
+
 stages:
   - before deploy
   - deploy
@@ -13,20 +19,13 @@ variables:
   STATE_RESOURCE_GROUP: terraform
 
 checkov scan:
+  extends: .checkov
   stage: before deploy
-  image:
-    name: bridgecrew/checkov:latest
-    entrypoint: [""]
-  script:
-    - checkov
-      --directory "${TERRAFORM_DIR}"
-      --output cli
-      --output junitxml
-      --output-file-path console,checkov-report.xml
-  artifacts:
-    when: always
-    reports:
-      junit: checkov-report.xml
+  # rules:
+  #   # On pipelines that trigger multiple child pipelines, don't run checkov over-and-over
+  #   - if: $ALREADY_SCANNED
+  #     when: never
+  #   - when: on_success
 
 .before_terraform_action:
   script:
@@ -120,4 +119,8 @@ apply:
     - if: $CI_MERGE_REQUEST_ID
       when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: always
+      when: on_success
+  needs:
+    - job: checkov scan
+      optional: true
+    - job: plan

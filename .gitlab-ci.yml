@@ -97,3 +97,13 @@ dont pass terraform dir:
     strategy: depend
     include:
       - local: gitlab/terraform-pipeline-default.yaml
+
+# This would fail with a Gitlab "undefined job in needs block" something or other error
+pass without scanning:
+  stage: test
+  variables:
+    TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/terraform/pass-without-scanning.tfstate
+  trigger:
+    strategy: depend
+    include:
+      - local: gitlab/terraform-pipeline-default.yaml
