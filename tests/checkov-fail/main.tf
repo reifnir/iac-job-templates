@@ -29,5 +29,5 @@ locals {
 # Check: CKV2_AWS_61: "Ensure that an S3 bucket has a lifecycle configuration"
 # Check: CKV2_AWS_62: "Ensure S3 buckets should have event notifications enabled"
 resource "aws_s3_bucket" "this" {
-  bucket = "job-template-test-bucket-${bucket_rando_suffix}"
+  bucket = "job-template-test-bucket-${local.bucket_rando_suffix}"
 }
