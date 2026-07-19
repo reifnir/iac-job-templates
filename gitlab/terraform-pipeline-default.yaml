@@ -21,11 +21,11 @@ variables:
 checkov scan:
   extends: .checkov
   stage: before deploy
-  # rules:
-  #   # On pipelines that trigger multiple child pipelines, don't run checkov over-and-over
-  #   - if: $ALREADY_SCANNED
-  #     when: never
-  #   - when: on_success
+  rules:
+    # On pipelines that trigger multiple child pipelines, don't run checkov over-and-over
+    - if: $ALREADY_SCANNED
+      when: never
+    - when: on_success
 
 .before_terraform_action:
   script:
