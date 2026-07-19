@@ -103,6 +103,7 @@ pass without scanning:
   stage: test
   variables:
     TERRAFORM_STATE_KEY: $CI_PROJECT_PATH/tests/terraform/pass-without-scanning.tfstate
+    TERRAFORM_DIR: tests/checkov-fail
   trigger:
     strategy: depend
     include:
