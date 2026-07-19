@@ -1,4 +1,4 @@
-# Copy of test/s3-simple. Used to test the default value for TERRAFORM_DIR.
+# Copy of test/aws-simple. Used to test the default value for TERRAFORM_DIR.
 terraform {
   required_providers {
     aws = { source = "hashicorp/aws" }

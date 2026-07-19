@@ -1,0 +1,16 @@
+# This job will be reused in a lot of places, no need to repeat it a zillion times
+# Sometimes needs rules, usually needs stage
+.checkov:
+  image:
+    name: bridgecrew/checkov:latest
+    entrypoint: [""]
+  script:
+    - checkov
+      --directory "${TERRAFORM_DIR}"
+      --output cli
+      --output junitxml
+      --output-file-path console,checkov-report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: checkov-report.xml
